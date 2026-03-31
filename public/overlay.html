@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VAULT Overlay</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    -webkit-app-region: no-drag;
+    pointer-events: none;
+  }
+
+  #container {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px 14px 16px;
+    background: rgba(10, 10, 18, 0.96);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    min-width: 300px;
+    max-width: 380px;
+    overflow: hidden;
+    position: relative;
+    pointer-events: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+    animation: slideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .toast.out {
+    animation: slideOut 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  .icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  .text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ach-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .ach-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ach-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform-origin: left;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(60px) scale(0.92); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to   { opacity: 0; transform: translateX(60px) scale(0.9); }
+  }
+
+  @keyframes shrink {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+</style>
+</head>
+<body>
+<div id="container"></div>
+
+<script type="module">
+  // Listen for achievement events from the main Tauri window
+  const { listen } = window.__TAURI__?.event ?? { listen: () => {} }
+
+  async function showAchievement({ name, description, accentColor }) {
+    const container = document.getElementById('container')
+    const color = accentColor || '#4a9eff'
+
+    const toast = document.createElement('div')
+    toast.className = 'toast'
+    toast.innerHTML = `
+      <div class="icon-wrap" style="background:${color}20;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round">
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+          <path d="M4 22h16"/>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+        </svg>
+      </div>
+      <div class="text-block">
+        <span class="ach-label" style="color:${color}">Achievement Unlocked</span>
+        <span class="ach-name">${name}</span>
+        <span class="ach-desc">${description}</span>
+      </div>
+      <div class="progress-bar" style="background:${color}; animation: shrink 4s linear forwards;"></div>
+    `
+
+    container.appendChild(toast)
+
+    // Auto-dismiss after 4s
+    setTimeout(() => {
+      toast.classList.add('out')
+      setTimeout(() => toast.remove(), 400)
+    }, 4000)
+  }
+
+  // Listen for events from Tauri backend
+  if (window.__TAURI__) {
+    listen('achievement-unlocked', (event) => {
+      showAchievement(event.payload)
+    })
+  }
+
+  // Dev: auto-demo
+  if (!window.__TAURI__) {
+    setTimeout(() => showAchievement({
+      name: 'First Blood',
+      description: 'Kill your first enemy',
+      accentColor: '#4a9eff'
+    }), 1000)
+  }
+</script>
+</body>
+</html>

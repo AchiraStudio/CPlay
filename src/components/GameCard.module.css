@@ -1,0 +1,394 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 68px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+
+.card:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-medium);
+  transform: translateX(6px);
+}
+
+.selected {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.selected:hover {
+  transform: translateX(6px);
+}
+
+.cover {
+  position: relative;
+  width: 50px;
+  height: 68px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.coverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.favDot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.achCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action {
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.playCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s var(--ease-spring);
+  box-shadow: 0 4px 12px rgba(255, 217, 59, 0.3);
+}
+
+.card:hover .playCircle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.selected .playCircle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.playCircle svg {
+  margin-left: 2px;
+}
+
+.playing {
+  box-shadow: 0 0 0 2px #3ddc84, 0 0 24px #3ddc8440;
+}
+
+.playing .playCircle {
+  opacity: 1;
+  transform: scale(1);
+  background: #3ddc84;
+  animation: pulse-ring 2s infinite;
+}
+
+.playingBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(61, 220, 132, 0.15);
+  backdrop-filter: var(--glass-filter);
+  border: 1px solid rgba(61, 220, 132, 0.3);
+  color: #3ddc84;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  animation: pulse-opacity 2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 #3ddc8480;
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px #3ddc8400;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 #3ddc8400;
+  }
+}
+
+@keyframes pulse-opacity {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ... existing styles ... */
+
+.card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 68px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+
+.card:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-medium);
+  transform: translateX(6px);
+}
+
+.selected {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.selected:hover {
+  transform: translateX(6px);
+}
+
+.cover {
+  position: relative;
+  width: 50px;
+  height: 68px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.coverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.favDot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.achCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Action & Ring Update */
+.action {
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.playWrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progressRing {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.card:hover .progressRing {
+  opacity: 1;
+}
+
+.ringBg {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 2.5;
+}
+
+.ringFill {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+.playCircle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s var(--ease-spring);
+  box-shadow: 0 4px 12px rgba(255, 217, 59, 0.3);
+}
+
+.card:hover .playCircle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.selected .playCircle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.playCircle svg {
+  margin-left: 1px;
+}
+
+.playing {
+  box-shadow: 0 0 0 2px #3ddc84, 0 0 24px #3ddc8440;
+}
+
+.playing .playCircle {
+  opacity: 1;
+  transform: scale(1);
+  background: #3ddc84;
+  animation: pulse-ring 2s infinite;
+}
+
+.playingBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(61, 220, 132, 0.15);
+  backdrop-filter: var(--glass-filter);
+  border: 1px solid rgba(61, 220, 132, 0.3);
+  color: #3ddc84;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  animation: pulse-opacity 2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 #3ddc8480;
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px #3ddc8400;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 #3ddc8400;
+  }
+}
+
+@keyframes pulse-opacity {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}

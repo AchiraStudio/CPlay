@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Next-Level Depth Layering */
+  --bg-base: #080a10;
+  --bg-surface: #0d111c;
+  --bg-elevated: rgba(18, 22, 36, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+
+  /* Delicate structuring borders */
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-medium: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #9aa0b8;
+  --text-muted: #5e647a;
+
+  /* Premium Console Accents */
+  --accent: #ffd93b;
+  --accent-glow: rgba(255, 217, 59, 0.25);
+  --accent-dim: rgba(255, 217, 59, 0.6);
+  --success: #3ddc84;
+  --warning: #ffb74d;
+  --danger: #ff5555;
+
+  /* Layout constraints */
+  --sidebar-width: 260px;
+  --titlebar-h: 40px;
+
+  /* Typography & Motion */
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+
+  /* Global Filters */
+  --shadow-float: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --glass-filter: blur(24px) saturate(150%);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent !important;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  width: calc(100vw - 2px);
+  height: calc(100vh - 2px);
+  margin: 1px;
+  background: var(--bg-base);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.app-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+}
+
+input,
+textarea {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s var(--ease-out-expo);
+  width: 100%;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Global Context Menu Component Style */
+.context-menu {
+  position: fixed;
+  z-index: 99999;
+  background: var(--bg-elevated);
+  backdrop-filter: var(--glass-filter);
+  border: 1px solid var(--border-medium);
+  border-radius: 12px;
+  padding: 6px;
+  min-width: 180px;
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.context-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.context-btn:hover {
+  background: var(--bg-glass-hover);
+}
+
+.context-btn.danger {
+  color: var(--danger);
+}
+
+.context-btn.danger:hover {
+  background: rgba(255, 85, 85, 0.15);
+}
+
+.context-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 0;
+}
+
+/* =========================================
+   GLOBAL SCROLLBARS
+   ========================================= */
+
+* {
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  /* Wide hit area for the mouse... */
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* The thumb (the part you drag) */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  /* ...but we use a thick transparent border to squeeze the visible background, 
+     creating a sleek "floating pill" look! */
+  border: 4px solid transparent;
+  background-clip: content-box;
+  transition: all 0.2s;
+}
+
+/* Hover state makes the scrollbar glow with your accent color */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-dim);
+  border-width: 3px;
+  /* Slightly thicker visible thumb on hover */
+}
+
+/* Active/Dragging state */
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--accent);
+  border-width: 2px;
+}
+
+/* Bottom right corner where X and Y scrollbars meet */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.overlay-root {
+  width: 100vw;
+  height: 100vh;
+  background: transparent !important;
+  overflow: hidden;
+}

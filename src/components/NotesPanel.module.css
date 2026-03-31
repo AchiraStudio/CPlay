@@ -1,0 +1,262 @@
+/* ── NotesPanel.module.css ─────────────────────────────────────
+   Standalone styles — does NOT import from AchievementPanel.
+   The panel slides in from the right, same spatial pattern as
+   AchievementPanel but with its own identity.
+   ─────────────────────────────────────────────────────────── */
+
+/* Backdrop — semi-transparent, blurred, click-to-close */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(4, 6, 10, 0.55);
+    backdrop-filter: blur(6px) saturate(120%);
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+}
+
+/* Panel — slides in from right edge */
+.panel {
+    position: relative;
+    width: 420px;
+    height: 100%;
+    background: rgba(10, 13, 22, 0.97);
+    border-left: 1px solid var(--border-medium);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: -24px 0 64px rgba(0, 0, 0, 0.6);
+}
+
+/* 3px accent strip on left edge, tinted to game accent */
+.accentStrip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    z-index: 10;
+    opacity: 0.9;
+    box-shadow: 2px 0 12px var(--game-accent, var(--accent));
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 20px 28px;
+    flex-shrink: 0;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.iconWrap {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.headerText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.headerLabel {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.headerGame {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+    line-height: 1;
+}
+
+.closeBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 0.2s var(--ease-out-expo);
+    flex-shrink: 0;
+}
+
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--border-subtle);
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+/* ── Accent divider line under header ─────────────────────── */
+
+.divider {
+    height: 1px;
+    flex-shrink: 0;
+    margin: 0 0 0 28px;
+    /* accent gradient fades right, set via inline style */
+}
+
+/* ── Writing body ─────────────────────────────────────────── */
+
+.body {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding: 20px 20px 0 28px;
+}
+
+/* Subtle horizontal line guides — evokes a real journal page.
+   These are visual only, not interactive. */
+.lineGuides {
+    position: absolute;
+    inset: 20px 20px 0 28px;
+    background-image: repeating-linear-gradient(to bottom,
+            transparent,
+            transparent 27px,
+            rgba(255, 255, 255, 0.025) 27px,
+            rgba(255, 255, 255, 0.025) 28px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.textarea {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: rgba(255, 255, 255, 0.88);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    /* matches the line guide spacing */
+    resize: none;
+    padding: 0;
+    caret-color: var(--game-accent, var(--accent));
+    /* Let the placeholder breathe */
+}
+
+.textarea::placeholder {
+    color: rgba(255, 255, 255, 0.18);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+
+.footer {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 16px 28px;
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(0, 0, 0, 0.25);
+    gap: 12px;
+}
+
+/* Save status */
+.saveStatus {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 0;
+}
+
+.saving {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+}
+
+.savingDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--game-accent, var(--accent));
+    animation: savingPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes savingPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.saved {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--success);
+    opacity: 0.75;
+}
+
+.noSave {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+}
+
+/* Character ring + count */
+.charWrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.charRing {
+    flex-shrink: 0;
+}
+
+.charCount {
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 28px;
+    text-align: right;
+    transition: color 0.3s ease;
+}
