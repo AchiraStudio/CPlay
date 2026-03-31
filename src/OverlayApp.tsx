@@ -10,16 +10,19 @@
  *
  * Both real game events AND debug commands from SettingsPage use the
  * same event names, so no special-casing is needed here.
+ *
+ * The queue renders badges stacked in the bottom-right corner.
+ * Each badge is self-timed via ToastShell's phase machine and calls
+ * onDone(id) when its animation lifecycle completes.
  */
 
 import { useEffect, useState } from 'react'
 import { listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/core'
-import { AnimatePresence } from 'framer-motion'
 import AchievementBadge from './components/AchievementBadge'
 import GameLaunchBadge from './components/GameLaunchBadge'
 
-// ── Payload shapes ────────────────────────────────────────────────────────────
+// ── Payload shapes ─────────────────────────────────────────────────────────────
 
 interface LaunchPayload {
   game_id: string
@@ -31,15 +34,13 @@ interface AchievementPayload {
   game_id: string
   achievement_name: string
   match_by?: string
-  // Real game events supply these via a subsequent load_achievements call.
-  // Debug events supply them directly in the payload.
   display_name?: string
   description?: string
   icon?: string
   accent?: string
 }
 
-// ── Notification union ────────────────────────────────────────────────────────
+// ── Notification union ─────────────────────────────────────────────────────────
 
 type NotifItem =
   | { id: string; type: 'launch'; payload: LaunchPayload; timestamp: number }
@@ -47,7 +48,7 @@ type NotifItem =
 
 let counter = 0
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────────
 
 export default function OverlayApp() {
   const [notifs, setNotifs] = useState<NotifItem[]>([])
@@ -77,9 +78,12 @@ export default function OverlayApp() {
     }
   }, [])
 
-  const dismiss = (id: string) => {
+  // Called by ToastShell when a badge's full animation lifecycle completes.
+  const onDone = (id: string) => {
     setNotifs(prev => {
       const next = prev.filter(n => n.id !== id)
+      // When the last badge is gone, signal Rust so cursor passthrough
+      // can be re-tightened (though the window stays open for next time).
       if (next.length === 0) {
         invoke('notify_badge_dismissed').catch(() => { })
       }
@@ -88,48 +92,53 @@ export default function OverlayApp() {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'transparent',
-      overflow: 'hidden',
-      pointerEvents: 'none',
-    }}>
-      <div style={{
+    // Full-screen transparent container — the window covers the whole monitor
+    // but this div is completely invisible. Only the badges inside are visible.
+    <div
+      style={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
+        inset: 0,
+        background: 'transparent',
+        overflow: 'hidden',
         pointerEvents: 'none',
-      }}>
-        <AnimatePresence mode="popLayout">
-          {notifs.map(n =>
-            n.type === 'launch' ? (
-              <GameLaunchBadge
-                key={n.id}
-                id={n.id}
-                payload={n.payload}
-                onDismiss={dismiss}
-              />
-            ) : (
-              <AchievementBadge
-                key={n.id}
-                id={n.id}
-                payload={{
-                  achievement_name: n.payload.achievement_name,
-                  // Prefer direct debug payload fields, fall back to name
-                  display_name: n.payload.display_name ?? n.payload.achievement_name,
-                  description: n.payload.description,
-                  icon: n.payload.icon,
-                  accent: n.payload.accent,
-                }}
-                onDismiss={dismiss}
-              />
-            )
-          )}
-        </AnimatePresence>
+      }}
+    >
+      {/* Badges stack bottom-right, newest at the bottom */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 28,
+          right: 28,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          pointerEvents: 'none',
+          gap: 0, // gap handled inside ToastShell via marginBottom
+        }}
+      >
+        {notifs.map(n =>
+          n.type === 'launch' ? (
+            <GameLaunchBadge
+              key={n.id}
+              id={n.id}
+              payload={n.payload}
+              onDone={onDone}
+            />
+          ) : (
+            <AchievementBadge
+              key={n.id}
+              id={n.id}
+              payload={{
+                achievement_name: n.payload.achievement_name,
+                display_name: n.payload.display_name ?? n.payload.achievement_name,
+                description: n.payload.description,
+                icon: n.payload.icon,
+                accent: n.payload.accent,
+              }}
+              onDone={onDone}
+            />
+          )
+        )}
       </div>
     </div>
   )

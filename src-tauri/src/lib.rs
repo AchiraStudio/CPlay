@@ -170,32 +170,26 @@ fn overlay_show(app: &AppHandle) {
         return;
     };
 
-    // Fit to primary monitor bottom-right corner
+    // Cover the entire primary monitor so notifications can be positioned
+    // anywhere via CSS inside the React app. The window itself is fully
+    // transparent and click-through, so the game is unaffected.
     if let Ok(Some(mon)) = ov.primary_monitor() {
         let size = mon.size();
         let pos = mon.position();
-        
-        // Calculate dynamic height: 60% of monitor height, clamped 400-900
-        let target_h = (size.height as f64 * 0.6) as u32;
-        let height = target_h.clamp(400, 900);
-        let width = 420;
-
-        let x = pos.x + (size.width as i32) - (width as i32);
-        let y = pos.y + (size.height as i32) - (height as i32);
 
         let _ = ov.set_size(tauri::Size::Physical(tauri::PhysicalSize {
-            width,
-            height,
+            width: size.width,
+            height: size.height,
         }));
         let _ = ov.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
-            x,
-            y,
+            x: pos.x,
+            y: pos.y,
         }));
     }
 
     let _ = ov.show();
     let _ = ov.set_always_on_top(true);
-    // Passthrough — the game still gets all mouse/keyboard input
+    // Passthrough — the game still receives all mouse/keyboard input
     let _ = ov.set_ignore_cursor_events(true);
 }
 
